@@ -19,7 +19,7 @@ define Package/openwisp-monitoring
 	CATEGORY:=Administration
 	SECTION:=admin
 	SUBMENU:=openwisp
-	DEPENDS:=+netjson-monitoring +openwisp-config
+	EXTRA_DEPENDS:=netjson-monitoring, openwisp-config
 	PKGARCH:=all
 	URL:=http://openwisp.org
 endef
@@ -29,8 +29,8 @@ define Package/netjson-monitoring
 	CATEGORY:=Administration
 	SECTION:=admin
 	SUBMENU:=openwisp
-	DEPENDS:=+libubus-lua +lua-cjson +rpcd
-	DEPENDS+=+NETJSON_MONITORING_IWINFO:rpcd-mod-iwinfo
+	EXTRA_DEPENDS:=libubus-lua, lua-cjson, rpcd
+	EXTRA_DEPENDS+=NETJSON_MONITORING_IWINFO:rpcd-mod-iwinfo
 	PKGARCH:=all
 	URL:=http://openwisp.org
 endef
