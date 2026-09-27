@@ -3,6 +3,23 @@ Developer Documentation
 
 .. include:: ../partials/developer-docs.rst
 
+The following diagram illustrates the role of OpenWrt Monitoring Agent
+within the OpenWISP architecture.
+
+.. figure:: ../images/architecture-v2-openwrt-monitoring-agent.png
+    :target: ../../_images/architecture-v2-openwrt-monitoring-agent.png
+    :align: center
+    :alt: OpenWISP Architecture: OpenWrt Monitoring Agent
+
+    **OpenWISP Architecture: highlighted OpenWrt Monitoring Agent**
+
+.. important::
+
+    For an enhanced viewing experience, open the image above in a new
+    browser tab.
+
+    Refer to :doc:`/general/architecture` for more information.
+
 .. contents:: **Table of Contents**:
     :depth: 2
     :local:
@@ -44,7 +61,7 @@ The following procedure illustrates how to compile *openwisp-monitoring*,
     make toolchain/install
     make package/openwisp-monitoring/compile
 
-The compiled packages will go in ``bin/packages/*/openwisp``.
+The compiled packages will go in ``bin/packages/*/openwisp_monitoring``.
 
 Alternatively, you can configure your build interactively with ``make
 menuconfig``, in this case you will need to select the
@@ -86,10 +103,12 @@ Run quality assurance tests with:
 
 .. code-block:: shell
 
-    #install openwisp-utils QA tools first
-    pip install openwisp-utils[qa]
+    # install development dependencies and QA tools first
+    sudo ./install-dev.sh
+    sudo apt install shfmt
+    pip install -r requirements-test.txt
 
-    #run QA checks before committing code
+    # run QA checks before committing code
     ./run-qa-checks
 
 Run tests
