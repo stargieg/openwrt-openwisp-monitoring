@@ -1,5 +1,4 @@
-package.path = package.path ..
-                 ";../files/lib/openwisp-monitoring/?.lua;../files/sbin/?.lua"
+package.path = package.path .. ";../files/lib/openwisp-monitoring/?.lua;../files/sbin/?.lua"
 
 local cjson = require('cjson')
 local luaunit = require('luaunit')
@@ -23,7 +22,8 @@ TestDhcp = {
     package.loaded.io = env.io
     package.loaded.io.open = dhcp_open
   end,
-  tearDown = function() end
+  tearDown = function()
+  end
 }
 
 TestNetJSON = {
@@ -42,7 +42,9 @@ TestNetJSON = {
         return f
       end,
       open = dhcp_open,
-      write = function(...) return nil end
+      write = function(...)
+        return nil
+      end
     }
     package.loaded.uci = {
       cursor = function()
@@ -55,23 +57,26 @@ TestNetJSON = {
               return nil
             end
           end,
-          get = function(...) return nil end,
-          foreach = function(...) return nil end
+          get = function(...)
+            return nil
+          end,
+          foreach = function(...)
+            return nil
+          end
         }
       end
     }
   end,
-  tearDown = function() end
+  tearDown = function()
+  end
 }
 
 function TestDhcp.test_dhcp_leases()
   local dhcp_functions = require('dhcp')
 
   luaunit.assertEquals(dhcp_functions.get_dhcp_leases(), dhcp_data.leases)
-  luaunit.assertEquals(dhcp_functions.parse_dhcp_lease_file('/tmp/dhcp.leases', {}),
-    dhcp_data.leases)
-  luaunit.assertEquals(
-    dhcp_functions.parse_dhcp_lease_file('/tmp/no_dhcp.leases', {}), {})
+  luaunit.assertEquals(dhcp_functions.parse_dhcp_lease_file('/tmp/dhcp.leases', {}), dhcp_data.leases)
+  luaunit.assertEquals(dhcp_functions.parse_dhcp_lease_file('/tmp/no_dhcp.leases', {}), {})
 end
 
 function TestNetJSON.test_dhcp()
