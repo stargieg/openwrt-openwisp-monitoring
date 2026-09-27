@@ -22,8 +22,7 @@ env.uci = {
         elseif arg[1] == 'network' and arg[3] == 'stp' then
           return '1'
         elseif arg[1] == 'network' and arg[3] == 'device' then
-          return '/sys/devices/platform/soc/8af8800.usb3/8a00000.dwc3/' ..
-                   'xhci-hcd.0.auto/usb2/2-1'
+          return '/sys/devices/platform/soc/8af8800.usb3/8a00000.dwc3/' .. 'xhci-hcd.0.auto/usb2/2-1'
         end
       end,
       foreach = function(...)
@@ -39,7 +38,7 @@ env.uci = {
 
 env.io = {
   popen = function(arg)
-    if arg == 'df' then
+    if arg == 'df -P' then
       return io.open(test_file_dir .. 'disk_usage.txt')
     elseif arg == 'cat /proc/cpuinfo | grep -c processor' then
       local f = assert(io.tmpfile())
@@ -53,8 +52,7 @@ env.io = {
     elseif arg == 'ip neigh 2> /dev/null' then
       return io.open(test_file_dir .. 'ip_neigh.txt')
     else
-      local modem =
-        '/sys/devices/platform/soc/8af8800.usb3/8a00000.dwc3/xhci-hcd.0.auto/usb2/2-1'
+      local modem = '/sys/devices/platform/soc/8af8800.usb3/8a00000.dwc3/xhci-hcd.0.auto/usb2/2-1'
       if arg == 'mmcli --output-json -m ' .. modem then
         return io.open(test_file_dir .. 'modem_data.txt')
       elseif arg == 'mmcli --output-json -m ' .. modem .. ' --signal-get' then

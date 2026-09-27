@@ -1,6 +1,33 @@
 Change log
 ==========
 
+0.3.1 [2026-05-04]
+------------------
+
+Bugfixes
+~~~~~~~~
+
+- Avoid failure if ubus objects not registered
+- Fixed pgrep returning multiple process IDs `#157
+  <https://github.com/openwisp/openwrt-openwisp-monitoring/issues/157>`_
+- Fixed cmd line too long: pass file path to curl `#159
+  <https://github.com/openwisp/openwrt-openwisp-monitoring/issues/159>`_
+
+0.3.0 [2025-10-27]
+------------------
+
+Bugfixes
+~~~~~~~~
+
+- Switch to portable df output (df -P) `#153
+  <https://github.com/openwisp/openwrt-openwisp-monitoring/issues/153>`_.
+- Fixed issue where WiFi client data was sent even when no clients were
+  connected.
+- Added check to ensure data file exists before sending to prevent errors
+  `#102
+  <https://github.com/openwisp/openwrt-openwisp-monitoring/issues/102>`_.
+- Ignored duplicate IP addresses in network configuration.
+
 0.2.1 [2024-11-07]
 ------------------
 
