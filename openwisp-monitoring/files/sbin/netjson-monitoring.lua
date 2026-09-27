@@ -20,19 +20,12 @@ local loadavg_file = io.popen('cat /proc/loadavg')
 local loadavg_output = loadavg_file:read()
 loadavg_file:close()
 loadavg_output = monitoring.utils.split(loadavg_output, ' ')
-local load_average = {
-  tonumber(loadavg_output[1]), tonumber(loadavg_output[2]),
-  tonumber(loadavg_output[3])
-}
+local load_average = {tonumber(loadavg_output[1]), tonumber(loadavg_output[2]), tonumber(loadavg_output[3])}
 
 -- init netjson data structure
 local netjson = {
   type = 'DeviceMonitoring',
-  general = {
-    hostname = board.hostname,
-    local_time = system_info.localtime,
-    uptime = system_info.uptime
-  },
+  general = {hostname = board.hostname, local_time = system_info.localtime, uptime = system_info.uptime},
   resources = {
     load = load_average,
     memory = system_info.memory,
@@ -43,14 +36,10 @@ local netjson = {
 }
 
 local dhcp_leases = monitoring.dhcp.get_dhcp_leases()
-if not monitoring.utils.is_table_empty(dhcp_leases) then
-  netjson.dhcp_leases = dhcp_leases
-end
+if not monitoring.utils.is_table_empty(dhcp_leases) then netjson.dhcp_leases = dhcp_leases end
 
 local host_neighbors = monitoring.neighbors.get_neighbors()
-if not monitoring.utils.is_table_empty(host_neighbors) then
-  netjson.neighbors = host_neighbors
-end
+if not monitoring.utils.is_table_empty(host_neighbors) then netjson.neighbors = host_neighbors end
 
 -- determine the interfaces to monitor
 local arg = {...}
@@ -86,14 +75,9 @@ local function get_wireless_netjson_interface(radio, name, iwinfo, no_clients, e
   local clients = nil
   local is_mesh = false
   local htmode = radio.config.htmode
-  local netjson_interface = {
-    name = name,
-    type = 'wireless',
-  }
+  local netjson_interface = {name = name, type = 'wireless'}
   -- iwinfo disabled
-  if iwinfo == nil then
-    return netjson_interface
-  end
+  if iwinfo == nil then return netjson_interface end
   -- if channel is missing the WiFi interface is not fully up
   -- and hence we avoid including its info because it will be rejected
   if monitoring.utils.is_empty(iwinfo.channel) == false then
@@ -131,7 +115,7 @@ end
 
 -- collect relevant wireless interface stats
 -- (traffic and connected clients)
-for _, radio in pairs(wireless_status) do
+for _, radio in pairs(wireless_status or {}) do
   for _, interface in ipairs(radio.interfaces) do
     local name = interface.ifname
     if name and not monitoring.utils.is_excluded(name) then
@@ -145,7 +129,7 @@ for _, radio in pairs(wireless_status) do
 end
 
 -- collect interface stats
-for name, interface in pairs(network_status) do
+for name, interface in pairs(network_status or {}) do
   -- only collect data from iterfaces which have not been excluded
   if not monitoring.utils.is_excluded(name) then
     local netjson_interface = {
@@ -170,9 +154,7 @@ for name, interface in pairs(network_status) do
           end
         end
       end
-      if next(bridge_members) ~= nil then
-        netjson_interface['bridge_members'] = bridge_members
-      end
+      if next(bridge_members) ~= nil then netjson_interface['bridge_members'] = bridge_members end
     end
     if wireless_interfaces[name] then
       monitoring.utils.dict_merge(wireless_interfaces[name], netjson_interface)
@@ -201,8 +183,7 @@ for name, interface in pairs(network_status) do
     local addresses = monitoring.interfaces.get_addresses(name)
     local virtual_interfaces = {'wireguard'}
 
-    if next(addresses) and
-      monitoring.utils.has_value(virtual_interfaces, addresses[1].proto) then
+    if next(addresses) and monitoring.utils.has_value(virtual_interfaces, addresses[1].proto) then
       netjson_interface.type = 'virtual'
     end
     if next(addresses) then netjson_interface.addresses = addresses end
@@ -213,12 +194,8 @@ for name, interface in pairs(network_status) do
     end
     table.insert(host_interfaces, netjson_interface)
     -- DNS info is independent from interface
-    if info.dns_servers then
-      monitoring.utils.array_concat(info.dns_servers, dns_servers)
-    end
-    if info.dns_search then
-      monitoring.utils.array_concat(info.dns_search, dns_search)
-    end
+    if info.dns_servers then monitoring.utils.array_concat(info.dns_servers, dns_servers) end
+    if info.dns_search then monitoring.utils.array_concat(info.dns_search, dns_search) end
   end
 end
 
